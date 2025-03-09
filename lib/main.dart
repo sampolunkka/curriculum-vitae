@@ -15,6 +15,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'Lato',
+            color: HexColor('#FFFFFF'),
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'Lato',
+            color: HexColor('#FFFFFF'),
+          ),
+        ),
         appBarTheme: AppBarTheme(
           backgroundColor: HexColor('#000000'),
           titleTextStyle: TextStyle(
@@ -26,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Flutter Demo',
-      home: MyHomePage(title: 'Curriculum Vitae'),
+      home: MyHomePage(title: 'Sampo Lunkka'),
     );
   }
 }

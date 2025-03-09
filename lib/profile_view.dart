@@ -39,40 +39,38 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [HexColor('#286169'), HexColor('#332d41')],
+    return Center(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [HexColor('#286169'), HexColor('#332d41')],
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          AvatarContainer(),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints.loose(Size(1000, double.infinity)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 300),
-                    BioContainer(),
-                    ListView(
-                      shrinkWrap: true,
-                      children: positions
-                          .map((position) => PositionContainer(position))
-                          .toList(),
-                    ),
-                  ],
+        child: Stack(
+          children: [
+            AvatarContainer(),
+            Padding(
+              padding: const EdgeInsets.only(top: 400),
+                child: Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      BioContainer(),
+                      ListView(
+                        shrinkWrap: true,
+                        children: positions
+                            .map((position) => PositionContainer(position))
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -91,12 +89,12 @@ class AvatarContainer extends StatelessWidget {
           return LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.black, Colors.transparent],
+            colors: [Colors.black, Colors.transparent.withOpacity(0.5)],
           ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
         },
         blendMode: BlendMode.dstIn,
         child: Image.asset(
-          'assets/images/banner.png',
+          'assets/images/banner-faded-narrow.png',
           fit: BoxFit.fitHeight,
         ),
       ),
@@ -144,34 +142,30 @@ class BioContainer extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            HexColor('333942').withOpacity(1),
-            HexColor('#000000').withOpacity(0.3)
+            HexColor('#333942').withOpacity(1),
+            HexColor('#611621').withOpacity(0.5)
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: HexColor('#FFFFFF').withOpacity(0.2),
-          width: 1,
-        ),
+        border: Border(
+          bottom: BorderSide(color: HexColor('#000000').withOpacity(0.4), width: 10),
+        )
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NameContainer(name),
-          Divider(color: HexColor('#FFFFFF').withOpacity(0.4), thickness: 1),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 800),
+        child:
+          // NameContainer(name),
+          // Divider(color: HexColor('#FFFFFF').withOpacity(0.4), thickness: 1),
           FutureBuilder<String>(
               future: _getBio(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return const Text('Something went wrong while loading bio');
+                  return const SelectableText('Something went wrong while loading bio');
                 } else {
-                  return Text('${snapshot.data}');
+                  return SelectableText('${snapshot.data}');
                 }
               }),
-        ],
       ),
     );
   }
@@ -208,20 +202,24 @@ class PositionContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: Text(position.title,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: 'Domine',
-                        color: HexColor('#FFFFFF')))),
+              child: Row(
+                children: [
+                  SelectableText(position.title,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Domine',
+                          color: HexColor('#FFFFFF'))),
+                  SelectableText(position.company,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Domine',
+                          color: HexColor('#FFFFFF'))),
+                ],
+              ),
+            ),
             Divider(color: HexColor('#FFFFFF').withOpacity(0.4), thickness: 1),
-            // ListView(
-            //   shrinkWrap: true,
-            //   children: <Widget>[
-            //     for (int i = 0; i < formats.length; i++)
-            //       FormatRow(formats[i], i),
-            //   ],
-            // ),
           ],
         ),
       ),
